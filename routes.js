@@ -1,5 +1,5 @@
 module.exports = {
-    'twitter':require("./servlets/twitter"),
+    'twitter':require("./servlets/proxy")({protocol:require('https'),server:"api.twitter.com"}),
     '':require("./servlets/string")("Hello World"),
     'test':{
         'sam':require("./servlets/string")("Hello Sam")
