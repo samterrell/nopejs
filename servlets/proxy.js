@@ -14,7 +14,7 @@ module.exports = function(url) {
                 });
             }).on('error', function (error) {
                 console.log(error);
-                resp.errors[500](req,resp);
+                resp.sendError(500);
             });
     }
 };

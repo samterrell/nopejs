@@ -12,16 +12,23 @@ var errors = require('./errors');
 
 function route(req, resp, routes) {
     var path = req.path.shift();
-    var r = routes[path || ''] || resp.errors[404];
-    if (typeof r == 'function') {
-        r(req, resp);
+    var handler = routes[path || ''];
+    if(typeof handler == 'undefined') {
+        resp.sendError(404);
+    } else if (typeof handler == 'function') {
+        handler(req, resp);
     } else {
-        route(req, resp, r);
+        route(req, resp, handler);
     }
 }
 
 server = http.createServer(function (req, resp) {
-    resp.errors = errors;
+    resp.sendError = function(status, msg) {
+        (errors[status]||errors[500]||function(req,resp) {
+            resp.writeHead(500, "Internal Server Error");
+            resp.end("Please fix error mappings.");
+        })(req,resp,msg);
+    }
     var url = parseurl(req.url);
     req.path = url.pathname.split('/').slice(1);
     req.parameters = parsequerystring(url.query);
