@@ -5,7 +5,7 @@ module.exports = function (fspath) {
     return function (req, resp) {
         var paths = [fspath];
         for (var i = 0; i < req.path.length; i++) {
-            if (req.path[i][0] == '.') {
+            if (req.path[i][0] == '.') { //not strictly correct, but arguable.
                 return resp.errors[404](req, resp);
             }
             paths.push(req.path[i]);
