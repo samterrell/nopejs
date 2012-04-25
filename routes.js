@@ -1,9 +1,15 @@
+var https = require('https');
+var http = require('http');
+var proxy = require('./servlets/proxy');
+var string = require('./servlets/string');
+var static = require('./servlets/static');
+
 module.exports = {
-    'twitter':require("./servlets/proxy")({protocol:require('https'),server:"api.twitter.com"}),
-    '':require("./servlets/string")("Hello World"),
+    'twitter':proxy({protocol:https, server:"api.twitter.com"}),
+    '':string("Hello World"),
     'test':{
-        'sam':require("./servlets/string")("Hello Sam")
+        'sam':string("Hello Sam")
     },
-    'test2':require("./servlets/string")("Hello whoever"),
-    'static':require("./servlets/static")("web")
+    'test2':string("Hello whoever"),
+    'static':static("web")
 };
