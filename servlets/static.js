@@ -12,22 +12,19 @@ module.exports = function (fspath) {
             paths.push(req.path[i]);
         }
         console.log(paths.join('/'));
-        fs.readFile(paths.join('/'), function (err, data) {
-            if (err) {
-                console.log(err);
-                resp.sendError(404);
-            } else {
-                var filename = req.path[req.path.length - 1];
-                var offset = filename.lastIndexOf('.');
-                var mime;
-                if (offset < 0) {
-                    mime = 'application/octet-stream';
-                } else {
-                    mime = mimes[filename.slice(offset + 1)] || 'application/octet-stream';
-                }
-                resp.setHeader('content-type', mime);
-                resp.end(data);
-            }
+        var stream = fs.createReadStream(paths.join('/'));
+        stream.on('error',function(){
+            resp.sendError(404);
         });
+        var filename = req.path[req.path.length - 1];
+        var offset = filename.lastIndexOf('.');
+        var mime;
+        if (offset < 0) {
+            mime = 'application/octet-stream';
+        } else {
+            mime = mimes[filename.slice(offset + 1)] || 'application/octet-stream';
+        }
+        resp.setHeader('content-type', mime);
+        stream.pipe(resp);
     }
 };
