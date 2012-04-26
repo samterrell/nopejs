@@ -11,5 +11,5 @@ module.exports = {
         'sam':string("Hello Sam")
     },
     'test2':string("Hello whoever"),
-    'static':static("web")
+    'static':static("web", {'cache-control':'public', 'expires':10})
 };
